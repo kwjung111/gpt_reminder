@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}To-Do 앱{% endblock %}</title>
+    <!-- Bootstrap CSS 추가 -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <!-- Font Awesome (아이콘 사용 시) -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <!-- 기존 스타일시트 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- CSRF 토큰 메타 태그 -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <!-- Viewport 메타 태그 추가 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="bg-primary text-white p-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <!-- 왼쪽: 앱 아이콘과 마이페이지 -->
+            <div class="d-flex align-items-center">
+                <!-- 앱 아이콘 (예: Font Awesome의 아이콘) -->
+                <a href="{{ url_for('dashboard') }}" class="text-white mr-3" aria-label="대시보드">
+                    <i class="fas fa-tasks fa-lg"></i>
+                </a>
+                <!-- 데스크탑에서는 텍스트 표시, 모바일에서는 숨김 -->
+                <a href="{{ url_for('my_page') }}" class="d-none d-md-flex align-items-center text-white" aria-label="마이페이지">
+                    <i class="fas fa-user-circle mr-1"></i> <span class="nav-text">마이페이지</span>
+                </a>
+                <a href="{{ url_for('my_page') }}" class="d-md-none text-white" aria-label="마이페이지">
+                    <i class="fas fa-user-circle fa-lg"></i>
+                </a>
+            </div>
+            <!-- 오른쪽: 목록보기와 추가하기 버튼 -->
+            {% if current_user.is_authenticated %}
+            <div>
+                <!-- 데스크탑에서는 텍스트와 아이콘 모두 표시 -->
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light d-none d-md-inline-flex align-items-center mr-2" aria-label="목록보기">
+                    <i class="fas fa-list mr-1"></i> <span class="nav-text">목록보기</span>
+                </a>
+                <!-- 모바일에서는 아이콘만 표시 -->
+                <a href="{{ url_for('dashboard') }}" class="btn btn-outline-light d-md-none" aria-label="목록보기">
+                    <i class="fas fa-list fa-lg"></i>
+                </a>
+                
+                <a href="{{ url_for('add_todo') }}" class="btn btn-outline-light d-none d-md-inline-flex align-items-center" aria-label="추가하기">
+                    <i class="fas fa-plus mr-1"></i> <span class="nav-text">추가하기</span>
+                </a>
+                <a href="{{ url_for('add_todo') }}" class="btn btn-outline-light d-md-none" aria-label="추가하기">
+                    <i class="fas fa-plus fa-lg"></i>
+                </a>
+            </div>
+            {% else %}
+            <div>
+                <!-- 로그인 및 회원가입 버튼도 동일하게 처리 -->
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light d-none d-md-inline-flex align-items-center mr-2" aria-label="로그인">
+                    <i class="fas fa-sign-in-alt mr-1"></i> <span class="nav-text">로그인</span>
+                </a>
+                <a href="{{ url_for('login') }}" class="btn btn-outline-light d-md-none" aria-label="로그인">
+                    <i class="fas fa-sign-in-alt fa-lg"></i>
+                </a>
+                
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light d-none d-md-inline-flex align-items-center" aria-label="회원가입">
+                    <i class="fas fa-user-plus mr-1"></i> <span class="nav-text">회원가입</span>
+                </a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-light d-md-none" aria-label="회원가입">
+                    <i class="fas fa-user-plus fa-lg"></i>
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </header>
+    <main class="content">
+        <div class="container my-4">
+            <!-- 플래시 메시지 -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer class="bg-dark text-center p-3 mt-auto">
+        <div class="container d-flex justify-content-between align-items-center">
+            <p class="mb-0">&copy; 문의/건의사항 help-whatever@naver.com</p>
+            {% if current_user.is_authenticated %}
+            <a href="{{ url_for('logout') }}" class="text-white small" aria-label="로그아웃">
+                <i class="fas fa-sign-out-alt"></i>
+            </a>
+            {% endif %}
+        </div>
+    </footer>
+    <!-- Bootstrap JS 및 jQuery 추가 -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Font Awesome JS (아이콘 사용 시) -->
+    <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"></script>
+    <!-- 기존 스크립트 -->
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</body>
+</html>

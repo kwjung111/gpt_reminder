@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}대시보드{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% for todo in todos %}
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card todo-card {% if todo.is_completed %}completed{% endif %}" data-id="{{ todo.id }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ todo.title }}</h5>
+                    <p class="card-text">{{ todo.content }}</p>
+                    <p class="card-text"><small class="text-muted">기한: {{ todo.deadline|datetime_format }}</small></p>
+                    <!-- 버튼 그룹 -->
+                    <div class="btn-group" role="group" aria-label="To-Do Actions">
+                        <!-- 완료 버튼 -->
+                        <button class="btn btn-success toggle-complete" data-id="{{ todo.id }}" title="완료" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <!-- 수정 버튼 -->
+                        <a href="{{ url_for('edit_todo', todo_id=todo.id) }}" class="btn btn-warning" title="수정" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- 삭제 버튼 -->
+                        <button class="btn btn-danger delete-todo" data-id="{{ todo.id }}" title="삭제" data-toggle="tooltip" data-placement="top">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <p>할 일이 없습니다.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

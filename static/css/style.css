@@ -1,0 +1,195 @@
+/* 기본 스타일 */
+body, html {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 16px; /* 기본 글꼴 크기 설정 */
+    line-height: 1.6; /* 가독성을 위한 행간 조절 */
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #343a40; /* Bootstrap의 bg-dark 대체 색상 */
+    color: white;
+    padding: 15px 0;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+header a:hover {
+    text-decoration: underline;
+}
+
+.nav-text {
+    display: inline;
+}
+
+/* 버튼 그룹 스타일링 */
+.btn-group .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-group .btn i {
+    margin-right: 5px;
+}
+
+/* To-Do 카드 스타일 */
+.todo-card.completed {
+    background-color: #d4edda; /* 연한 녹색 배경 */
+    border-left: 5px solid #28a745; /* 녹색 테두리 */
+    opacity: 0.8;
+    text-decoration: line-through;
+    transition: all 0.3s ease;
+}
+
+.todo-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 버튼 스타일 개선 */
+.toggle-complete, .delete-todo {
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem 0.5rem; /* 버튼 크기 조절 */
+}
+
+.toggle-complete i, .delete-todo i {
+    color: inherit; /* 버튼의 텍스트 색상을 아이콘에 상속 */
+}
+
+/* 네비게이션 버튼 호버 효과 */
+nav a.btn:hover {
+    background-color: #ffffff;
+    color: #343a40;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
+
+nav a.btn.active {
+    background-color: #ffffff;
+    color: #343a40;
+    font-weight: bold;
+}
+
+/* 푸터 스타일 */
+footer {
+    background-color: #343a40; /* Bootstrap의 bg-dark 대체 색상 */
+    color: white;
+    padding: 15px 0;
+    font-size: 0.9rem; /* 푸터 글꼴 크기 줄이기 */
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.8rem; /* 추가로 글꼴 크기 줄이기 */
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px; /* 모바일에서 글꼴 크기 조정 */
+    }
+
+    header, footer {
+        padding: 10px 0;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .card-text {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-size: 0.9rem;
+        padding: 6px 10px;
+    }
+
+    .toggle-complete, .delete-todo {
+        font-size: 0.9rem;
+        padding: 4px 8px;
+    }
+
+    footer {
+        font-size: 0.8rem; /* 모바일에서 푸터 글꼴 크기 조정 */
+    }
+
+    footer p {
+        font-size: 0.7rem;
+    }
+
+    /* 숨김 처리 */
+    .nav-text {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    header a i {
+        font-size: 1.5rem;
+    }
+
+    nav a.btn i {
+        font-size: 1.2rem;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-text {
+        font-size: 0.9rem;
+    }
+
+    footer {
+        font-size: 0.7rem; /* 스마트폰에서 푸터 글꼴 크기 더욱 줄이기 */
+    }
+
+    footer p {
+        font-size: 0.6rem;
+    }
+}
+
+/* To-Do 추가/수정 페이지 폼 스타일 */
+form .form-group label {
+    font-weight: bold;
+}
+
+form .form-control {
+    width: 100%;
+}
+
+form .btn {
+    margin-right: 10px;
+}
+
+@media (max-width: 576px) {
+    form .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

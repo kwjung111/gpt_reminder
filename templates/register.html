@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}회원가입{% endblock %}
+{% block content %}
+<h2>회원가입</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=32) }}
+    </p>
+    <p>
+        {{ form.password.label }}<br>
+        {{ form.password(size=32) }}
+    </p>
+    <p>
+        {{ form.confirm_password.label }}<br>
+        {{ form.confirm_password(size=32) }}
+    </p>
+    <!-- 선택 사항 필드 -->
+    <p>
+        {{ form.age.label }}<br>
+        {{ form.age(size=32) }}
+    </p>
+    <!-- 나머지 선택 사항 필드들 -->
+    <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}
