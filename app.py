@@ -1,6 +1,6 @@
 from flask_migrate import Migrate
 from flask import Flask, render_template, redirect, url_for, flash, request
-from forms import RegisterForm, LoginForm, TodoForm, UpdateUserForm
+from forms import RegisterForm, LoginForm, TodoForm, UpdateUserForm, AiMemoForm
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -12,7 +12,7 @@ from flask_wtf.csrf import CSRFProtect, generate_csrf
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secrets.token_hex(16)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://gpt_user:2024!@3456&*haha@localhost:3309/gpt_reminder'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://id:pw@localhost:3309/gpt_reminder'
 db.init_app(app)
 migrate = Migrate(app, db)
 
@@ -22,8 +22,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # 여기에서 models를 임포트합니다.
-from models import User, Todo
-
+from models import User, Todo, AiMemo
 
 # 데이터베이스 생성
 with app.app_context():
@@ -44,10 +43,13 @@ def load_user(user_id):
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+    if form.age.data == '':
+        form.age.data = None
     if form.validate_on_submit():
         hashed_password = generate_password_hash(form.password.data)
         new_user = User(
             username=form.username.data,
+            name=form.name.data,
             password=hashed_password,
             age=form.age.data,
             gender=form.gender.data,
@@ -105,13 +107,95 @@ def add_todo():
         return redirect(url_for('dashboard'))
     return render_template('todo.html', form=form, action='저장')
 
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    ai_memo_batch_list = AiMemo.query.filter_by(is_gpted = 0).order_by(AiMemo.id.desc()).all()
+    for ai_memo in ai_memo_batch_list:
+        print(ai_memo.id)
+        run_gpt(ai_memo.id)
+    return 1
+
+def run_gpt(id):
+    import gpt as GPT
+    gpt = GPT.GPT()
+    prompt, user_id = get_gpt_prompt_and_userid(id)
+    if not prompt:
+        return False
+    
+    result = gpt.sendAiMemo(prompt)
+    
+    if not result :
+        return False
+    
+    new_todo = Todo(
+        title=result["title"],
+        content=result["content"],
+        deadline=result["duedate"],
+        user_id=user_id
+    )
+    db.session.add(new_todo)
+    
+    aimemo = AiMemo.query.get_or_404(id)
+    aimemo.is_gpted = 1
+    db.session.commit()
+        
+    return True
+            
+
+def get_gpt_prompt_and_userid(id):
+    memo_info = AiMemo.query.filter_by(id=id).first()
+    user_id = memo_info.user_id
+    current_user = User.query.filter_by(id=user_id).first()
+    
+    if not (current_user and memo_info):
+        return False
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(now)
+    prompt = f"## 현재시각 : {now}"
+    
+    prompt += "\n## 상황"
+    user_attributes = {
+        '이름': current_user.name,
+        '나이': current_user.age,
+        '성별': current_user.gender,
+        '직업': current_user.job,
+        '회사': current_user.company,
+        '업무시간': current_user.work_hours,
+        '점심시간': current_user.lunch_time
+    }
+
+    for key, value in user_attributes.items():
+        if value:
+            prompt += f'\n{key}: {value}'
+            
+    prompt += '\n## 내용'
+    prompt += f'\n{memo_info.content}'
+    
+    return prompt, user_id    
+
+@app.route('/ai_memo', methods=['GET', 'POST'])
+@login_required
+def ai_memo():
+    form = AiMemoForm()
+    if form.validate_on_submit():
+        
+        new_ai_memo = AiMemo(
+            content=form.content.data,
+            owner=current_user
+        )
+        db.session.add(new_ai_memo)
+        db.session.commit()
+        flash('ai가 메모를 생성중입니다...', 'success')
+        return redirect(url_for('dashboard'))
+    return render_template('ai_memo.html', form=form, action='저장')
+
 # 마이페이지 라우트
 @app.route('/my_page', methods=['GET', 'POST'])
 @login_required
 def my_page():
     form = UpdateUserForm(obj=current_user)
     if form.validate_on_submit():
-        current_user.username = form.username.data
+        current_user.name = form.name.data
         current_user.age = form.age.data
         current_user.gender = form.gender.data
         current_user.job = form.job.data
@@ -179,7 +263,6 @@ def delete_todo(todo_id):
     db.session.delete(todo)
     db.session.commit()
     return jsonify({'success': True})
-
 
 if __name__ == '__main__':
     app.run(debug=True)

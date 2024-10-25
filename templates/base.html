@@ -49,6 +49,13 @@
                 <a href="{{ url_for('add_todo') }}" class="btn btn-outline-light d-md-none" aria-label="추가하기">
                     <i class="fas fa-plus fa-lg"></i>
                 </a>
+
+                <a href="{{ url_for('ai_memo') }}" class="btn btn-outline-light d-none d-md-inline-flex align-items-center" aria-label="ai메모">
+                    <i class="fas fa-robot mr-1"></i> <span class="nav-text">ai메모</span>
+                </a>
+                <a href="{{ url_for('ai_memo') }}" class="btn btn-outline-light d-md-none" aria-label="ai메모">
+                    <i class="fas fa-robot fa-lg"></i>
+                </a>
             </div>
             {% else %}
             <div>

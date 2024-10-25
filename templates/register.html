@@ -17,9 +17,35 @@
         {{ form.confirm_password(size=32) }}
     </p>
     <!-- 선택 사항 필드 -->
+    <p>아래는 ai메모를 위한 선택사항입니다.</p>
+    <p>자유양식으로 기입하면 됩니다.</p>
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}
+    </p>
     <p>
         {{ form.age.label }}<br>
         {{ form.age(size=32) }}
+    </p>
+    <p>
+        {{ form.gender.label }}<br>
+        {{ form.gender(size=32) }}
+    </p>
+    <p>
+        {{ form.job.label }}<br>
+        {{ form.job(size=32) }}
+    </p>
+    <p>
+        {{ form.company.label }}<br>
+        {{ form.company(size=32) }}
+    </p>
+    <p>
+        {{ form.work_hours.label }}<br>
+        {{ form.work_hours(size=32) }}
+    </p>
+    <p>
+        {{ form.lunch_time.label }}<br>
+        {{ form.lunch_time(size=32) }}
     </p>
     <!-- 나머지 선택 사항 필드들 -->
     <p>{{ form.submit() }}</p>

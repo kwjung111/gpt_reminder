@@ -9,6 +9,7 @@ class RegisterForm(FlaskForm):
     password = PasswordField('비밀번호', validators=[DataRequired(), Length(min=6, max=150)])
     confirm_password = PasswordField('비밀번호 확인', validators=[DataRequired(), EqualTo('password')])
     # 선택 사항 필드
+    name = StringField('이름')
     age = StringField('나이')
     gender = StringField('성별')
     job = StringField('직업')
@@ -33,8 +34,12 @@ class TodoForm(FlaskForm):
     )
     submit = SubmitField('추가')
     
+class AiMemoForm(FlaskForm):
+    content = TextAreaField('자유롭게 내용을 추가하세요', validators=[DataRequired()])
+    submit = SubmitField('추가')
+    
 class UpdateUserForm(FlaskForm):
-    username = StringField('사용자 이름', validators=[DataRequired(), Length(min=3, max=150)])
+    name = StringField('이름', validators=[Optional()])
     age = IntegerField('나이', validators=[Optional()])
     gender = SelectField('성별', choices=[('남성', '남성'), ('여성', '여성'), ('기타', '기타')], validators=[Optional()])
     job = StringField('직업', validators=[Optional(), Length(max=100)])
