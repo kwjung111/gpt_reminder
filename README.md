@@ -12,3 +12,9 @@
 - **반응형 디자인**: 모바일 환경 최적화를 위한 UI 개선
 - **정렬 기능**: 마감일 기준으로 To-Do 항목 내림차순 정렬
 
+## 실행
+  1. docker-compose.yml 파일에 환경 변수 입력
+  2. $ docker-compose up -d
+  
+## 종료
+  1. $ docker-compose down
